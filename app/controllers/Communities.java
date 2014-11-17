@@ -1,6 +1,7 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.Community;
 import models.RestResponse;
@@ -69,7 +70,10 @@ public class Communities extends Controller {
             User user = new User();
             user = user.getUserFromSession(session());
 
-            return ok(views.html.community.index.render(user, communities, "Top Level Communities", contentString.toString(), endpoint));
+            ObjectMapper mapper = new ObjectMapper();
+            String pretty = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNode);
+
+            return ok(views.html.community.index.render(user, communities, "Top Level Communities", pretty, endpoint));
 
         } catch (MalformedURLException e) {
             Logger.error(e.getMessage(), e);
